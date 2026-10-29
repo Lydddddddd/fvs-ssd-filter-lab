@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "pdf_pages": 15,
+  "body_paragraphs_checked": 282,
+  "text_runs_checked": 286,
+  "body_font": "SimSun 10.5 pt",
+  "line_spacing_multiple": 1.25,
+  "section_count": 4,
+  "preserved_reference_parts": 30,
+  "toc_pages_verified": {
+    "1 实验环境与复现信息": 3,
+    "2 系统设计理解与比较": 4,
+    "3 测试方案与负载选择": 5,
+    "4 实验结果与机制分析": 6,
+    "5 优化设计实现与验证": 10,
+    "6 调试记录": 13,
+    "7 实验总结": 14,
+    "参考文献": 15
+  },
+  "no_placeholder_tokens": true,
+  "visual_pages_reviewed": 15,
+  "latest_changed_pages": [
+    "page-3.png",
+    "page-13.png"
+  ],
+  "embedded_pdf_font": "SimSun",
+  "pdf_sha256": "35f7978874c48e99fdc60195094ae4f475fced90955e19ada054de1cd839633d",
+  "docx_sha256": "5f58e2bb6eadbd40be34909c847a849ed718262ecebb8e42d6a1d6adcd4495f5"
+}

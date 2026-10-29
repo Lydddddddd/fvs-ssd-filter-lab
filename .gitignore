@@ -11,3 +11,8 @@ build/
 datasets/
 systems/
 report-private/
+
+data/optimization/runs/
+data/optimization/correctness/
+data/optimization/async-control/
+data/optimization/driver_logs/
