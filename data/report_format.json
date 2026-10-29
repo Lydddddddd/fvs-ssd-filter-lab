@@ -71,6 +71,28 @@
     "STZhongsong",
     "TimesNewRomanPSMT"
   ],
-  "pdf_sha256": "0cd99cd75017c5bd200e2c7b60032550cad4e9403eda7d1efb7e4e9c74f7c3ba",
-  "docx_sha256": "7cf47f934cad1abce3d51529218ba3d904e9a0654b2201184a99d09eab860b1d"
+  "pdf_sha256": "105e5258b132ac3d1fa9117b6a73c29c973a96f9941dd4652d8cb73995523321",
+  "docx_sha256": "bee10204a406a578d5632a1d74796b4142e1cce0690d05c4765c86415517d997",
+  "cover_logo_color": "original red",
+  "cover_logo_recoloring_removed": true,
+  "intentional_template_changes": [
+    "Removed the cover logo green duotone and stored color-temperature effects; kept the original red PNG, image size and position."
+  ],
+  "color_revision_checks": {
+    "only_changed_docx_package_part": "word/document.xml",
+    "pdf_changed_pages": [
+      1
+    ],
+    "pdf_changed_pixel_bounds": [
+      394,
+      267,
+      796,
+      348
+    ],
+    "pdf_body_pages_pixel_identical": 15,
+    "pdf_text_identical": true,
+    "docx_body_pages_pixel_identical": 16,
+    "cover_red_pixels": 7233,
+    "cover_green_pixels": 0
+  }
 }

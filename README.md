@@ -77,7 +77,7 @@ python3 scripts/analyze_results.py \
 
 中文图使用本机合法提供的宋体；字体文件不随仓库分发。不传 `--font` 时需要自行配置可用的中文字体，或将绘图标签改为英文。
 
-报告生成程序为 `scripts/build_report.py`，直接以课程固定版本的 `docs/实验报告格式参考.docx` 为底稿，在原有六章中填入实验内容。封面、正文和标题的字体字号、行距、样式、四节页面设置、页眉页脚及编号定义均沿用原模板；原始样式文件保持不变。调试记录放入第1章，优化实现与验证放入第5章，不设参考文献章节。重建时传入 `--template`、`--project`、`--output` 和 `--identity`；身份文件包含 `name`、`student_id`、`class`、`department`，单独保存在本地。填充后在Word中更新原目录域，再导出PDF并逐页检查。可将刷新后的临时副本传给 `--refreshed-docx`，只导入目录缓存和定位书签，保留原始样式文件。其他测量应重新分析并更新正文。
+报告生成程序为 `scripts/build_report.py`，直接以课程固定版本的 `docs/实验报告格式参考.docx` 为底稿，在原有六章中填入实验内容。封面、正文和标题的字体字号、行距、样式、四节页面设置、页眉页脚及编号定义均沿用原模板；原始样式文件保持不变。封面校名按要求恢复红色原图，去掉模板自带的绿色重新着色及色温效果，图片大小和位置不变。调试记录放入第1章，优化实现与验证放入第5章，不设参考文献章节。重建时传入 `--template`、`--project`、`--output` 和 `--identity`；身份文件包含 `name`、`student_id`、`class`、`department`，单独保存在本地。填充后在Word中更新原目录域，再导出PDF并逐页检查。可将刷新后的临时副本传给 `--refreshed-docx`，只导入目录缓存和定位书签，保留原始样式文件。其他测量应重新分析并更新正文。
 
 运行二进制时，`GATEANN_VISITED_MODE=bitmap` 启用位图；未设置或设为 `hash` 使用哈希路径。位图仅在 GateANN 的 filter-precheck 模式生效。`GATEANN_RESULT_DUMP=/path/prefix` 会在查询计时结束后导出实际结果与返回数量；性能实验不设置此变量。
 

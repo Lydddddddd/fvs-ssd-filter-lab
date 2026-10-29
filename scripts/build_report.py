@@ -3,7 +3,8 @@
 
 The course DOCX is required as input and is never overwritten. Content is
 inserted into its six existing chapters; original styles, section properties,
-numbering, headers, footers and cover drawing are retained byte for byte.
+numbering, headers and footers are retained byte for byte. The cover logo uses
+its original red image, with the template's green recoloring effects removed.
 """
 import argparse
 from copy import deepcopy
@@ -31,6 +32,21 @@ EDITABLE_PARTS = {
     '[Content_Types].xml', 'word/document.xml',
     'word/_rels/document.xml.rels', 'docProps/core.xml', 'docProps/app.xml',
 }
+
+
+def restore_cover_logo_color(document):
+    """Remove the cover logo's recoloring while retaining its image and geometry."""
+    for element in list(document._element.body)[:17]:
+        for blip in element.iter(qn('a:blip')):
+            if blip.get(qn('r:embed')) != 'rId9':
+                continue
+            for effect in list(blip):
+                if effect.tag == qn('a:duotone'):
+                    blip.remove(effect)
+            for extension_list in blip.findall(qn('a:extLst')):
+                for extension in list(extension_list):
+                    if extension.find('{http://schemas.microsoft.com/office/drawing/2010/main}imgProps') is not None:
+                        extension_list.remove(extension)
 
 
 def replace_text(element, value):
@@ -152,6 +168,7 @@ def main():
     bs = {(r['system'], r['bucket'], r['L']): r for r in data['baseline_summary']}
     os = {(r['variant'], r['bucket'], r['L']): r for r in data['optimization_summary']}
     doc = Document(args.template)
+    restore_cover_logo_color(doc)
     original = list(doc._element.body)
     body_source = deepcopy(original[22])
     heading_source = deepcopy(original[23])
@@ -450,6 +467,7 @@ def main():
              'section_count': 4, 'source_styles_unchanged': True,
              'body_font': '宋体 / Times New Roman (original Normal style)',
              'body_font_pt': 12, 'line_spacing_multiple': 1.5,
+             'cover_logo_color': 'original red; template recoloring effects removed',
              'original_parts_preserved': preserved, 'changed_parts': changed,
              'headings': headings, 'tables': table_count, 'figures': 3,
              'source_rows': {'baseline': len(rows), 'optimization': 70},

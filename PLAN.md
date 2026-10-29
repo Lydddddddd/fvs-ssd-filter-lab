@@ -16,4 +16,4 @@
 
 原始基线不被优化实验覆盖。优化实验属于补充实验，保持 K=10、threads=1、beamwidth=8、AIO、mem_L=0、cache_budget=0、FullAdj R=32；L 保持课程数值。
 
-GitHub 发布已获用户授权，公开仓库为 https://github.com/Lydddddddd/fvs-ssd-filter-lab 。全部性能结论引用实际测量；报告个人信息单独保存，不上传公开仓库。报告按最新要求直接填充原始DOCX，保留原字体、字号、行距和封面，删除参考文献，检查目录页码并逐页核验。
+GitHub 发布已获用户授权，公开仓库为 https://github.com/Lydddddddd/fvs-ssd-filter-lab 。全部性能结论引用实际测量；报告个人信息单独保存，不上传公开仓库。报告按最新要求直接填充原始DOCX，保留原字体、字号、行距和封面布局，将校名恢复为原图红色，删除参考文献，检查目录页码并逐页核验。
