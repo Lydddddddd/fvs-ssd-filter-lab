@@ -1,0 +1,101 @@
+experiment_id=20261029-083358
+repeats=3
+threads=1
+beamwidth=8
+topk=10
+pipeann_high_l=20 40 80
+pipeann_representative_l=40
+gateann_high_l=160 320 640
+gateann_representative_l=320
+io_backend=aio
+pipeann_repo=/workspace/fvs-course-lab/systems/PipeANN
+pipeann_commit=2ec84fe20c37dc3cc236b66f7eba31c0cc80bf1e
+gateann_repo=/workspace/fvs-course-lab/systems/GateANN-public
+gateann_commit=71e87cbf0e25c0400c0109dd25a64a7c4dccc9dd
+gateann_patch_sha256=d90657151bf1adc735bc6916e4120690a64288281fe76ac24ad2e4a859662bc1  /workspace/fvs-course-lab/patches/gateann_aio_compat.patch
+
+[uname]
+Linux docker-liyaodong 5.15.0-139-generic #149~20.04.1-Ubuntu SMP Wed Apr 16 08:29:56 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+
+[lscpu]
+Architecture:                         x86_64
+CPU op-mode(s):                       32-bit, 64-bit
+Address sizes:                        43 bits physical, 48 bits virtual
+Byte Order:                           Little Endian
+CPU(s):                               128
+On-line CPU(s) list:                  0-127
+Vendor ID:                            AuthenticAMD
+Model name:                           AMD EPYC 7542 32-Core Processor
+CPU family:                           23
+Model:                                49
+Thread(s) per core:                   2
+Core(s) per socket:                   32
+Socket(s):                            2
+Stepping:                             0
+Frequency boost:                      enabled
+CPU max MHz:                          2900.0000
+CPU min MHz:                          1500.0000
+BogoMIPS:                             5788.91
+Flags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb cat_l3 cdp_l3 hw_pstate ssbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local clzero irperf xsaveerptr rdpru wbnoinvd amd_ppin arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif v_spec_ctrl umip rdpid overflow_recov succor smca sme sev sev_es
+Virtualization:                       AMD-V
+L1d cache:                            2 MiB (64 instances)
+L1i cache:                            2 MiB (64 instances)
+L2 cache:                             32 MiB (64 instances)
+L3 cache:                             256 MiB (16 instances)
+NUMA node(s):                         2
+NUMA node0 CPU(s):                    0-31,64-95
+NUMA node1 CPU(s):                    32-63,96-127
+Vulnerability Gather data sampling:   Not affected
+Vulnerability Itlb multihit:          Not affected
+Vulnerability L1tf:                   Not affected
+Vulnerability Mds:                    Not affected
+Vulnerability Meltdown:               Not affected
+Vulnerability Mmio stale data:        Not affected
+Vulnerability Reg file data sampling: Not affected
+Vulnerability Retbleed:               Mitigation; untrained return thunk; SMT enabled with STIBP protection
+Vulnerability Spec rstack overflow:   Mitigation; safe RET
+Vulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl and seccomp
+Vulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:             Mitigation; Retpolines; IBPB conditional; STIBP always-on; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected
+Vulnerability Srbds:                  Not affected
+Vulnerability Tsx async abort:        Not affected
+
+[memory]
+               total        used        free      shared  buff/cache   available
+Mem:           251Gi        56Gi        28Gi       500Mi       167Gi       192Gi
+Swap:          255Gi       117Gi       138Gi
+
+[block-devices]
+NAME    MODEL                                      SIZE ROTA TRAN
+loop0                                                4K    0 
+loop2                                             63.8M    0 
+loop3                                              616M    0 
+loop4                                             11.6M    0 
+loop5                                              1.9M    0 
+loop6                                             66.8M    0 
+loop7                                             91.7M    0 
+loop8                                             50.3M    0 
+loop9                                             11.8M    0 
+loop10                                            66.8M    0 
+loop11                                              74M    0 
+loop12                                           346.3M    0 
+loop13                                            21.6M    0 
+loop14                                            44.7M    0 
+loop15                                            21.7M    0 
+loop16                                           531.4M    0 
+loop17                                           349.7M    0 
+loop18                                             402M    0 
+loop19                                            63.8M    0 
+loop20                                           531.5M    0 
+loop21                                              74M    0 
+loop22                                           615.3M    0 
+loop23                                             1.9M    0 
+nvme1n1 Samsung SSD 990 PRO 4TB                    3.6T    0 nvme
+nvme0n1 Samsung SSD 990 EVO Plus 4TB               3.6T    0 nvme
+
+[compiler]
+c++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+Copyright (C) 2021 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+

@@ -1,0 +1,21 @@
+{
+  "baseline": {
+    "rows": 30,
+    "configurations": 10,
+    "repeats_per_configuration": 3
+  },
+  "optimization": {
+    "rows": 70,
+    "configurations": 10,
+    "repeats_per_configuration": 7
+  },
+  "status": "PASS",
+  "formal_processes_with_exit_0": {
+    "baseline": 18,
+    "optimization": 42
+  },
+  "correctness_configurations": 10,
+  "binary_identical_top10_configurations": 9,
+  "max_recall_delta_pp": 0.04999999999999716,
+  "patch_matches_measured_sha256": true
+}

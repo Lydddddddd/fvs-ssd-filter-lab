@@ -1,0 +1,13 @@
+__pycache__/
+.DS_Store
+build/
+*.o
+*.so
+*.a
+*.tar.zst
+*.u8bin
+*.ibin
+*.spmat
+datasets/
+systems/
+report-private/

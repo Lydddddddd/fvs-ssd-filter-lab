@@ -1,0 +1,63 @@
+{
+  "variant": "hash (unchanged between runs)",
+  "tier": "debug_100000",
+  "bucket": "high",
+  "L": 160,
+  "runs": [
+    {
+      "run": 1,
+      "recall_percent": 85.8,
+      "output_sha256": "c86af637d8144feebce14e5fc9535ec7dfea4ba62d8866838d147317ee6ec7f9"
+    },
+    {
+      "run": 2,
+      "recall_percent": 85.8,
+      "output_sha256": "c86af637d8144feebce14e5fc9535ec7dfea4ba62d8866838d147317ee6ec7f9"
+    },
+    {
+      "run": 3,
+      "recall_percent": 85.8,
+      "output_sha256": "c86af637d8144feebce14e5fc9535ec7dfea4ba62d8866838d147317ee6ec7f9"
+    },
+    {
+      "run": 4,
+      "recall_percent": 85.75,
+      "output_sha256": "b14760e0693c115bc7b599b1f9329f674c56750160b130c3531a2042af4f002c"
+    },
+    {
+      "run": 5,
+      "recall_percent": 85.75,
+      "output_sha256": "b14760e0693c115bc7b599b1f9329f674c56750160b130c3531a2042af4f002c"
+    },
+    {
+      "run": 6,
+      "recall_percent": 85.75,
+      "output_sha256": "b14760e0693c115bc7b599b1f9329f674c56750160b130c3531a2042af4f002c"
+    },
+    {
+      "run": 7,
+      "recall_percent": 85.8,
+      "output_sha256": "c86af637d8144feebce14e5fc9535ec7dfea4ba62d8866838d147317ee6ec7f9"
+    },
+    {
+      "run": 8,
+      "recall_percent": 85.75,
+      "output_sha256": "b14760e0693c115bc7b599b1f9329f674c56750160b130c3531a2042af4f002c"
+    },
+    {
+      "run": 9,
+      "recall_percent": 85.8,
+      "output_sha256": "c86af637d8144feebce14e5fc9535ec7dfea4ba62d8866838d147317ee6ec7f9"
+    },
+    {
+      "run": 10,
+      "recall_percent": 85.75,
+      "output_sha256": "b14760e0693c115bc7b599b1f9329f674c56750160b130c3531a2042af4f002c"
+    }
+  ],
+  "distinct_output_hashes": 2,
+  "recall_range_pp": [
+    85.75,
+    85.8
+  ]
+}

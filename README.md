@@ -29,6 +29,7 @@
 | `scripts/run_optimization_experiment.py` | 正确性检查及 7 轮交替对照实验 |
 | `scripts/validate_query_outputs.py` | 独立检查实际返回数量、标签、去重、精确 L2 排序及 Recall |
 | `scripts/analyze_results.py` | 数据审计、三轮/七轮汇总及绘图 |
+| `scripts/audit_deliverables.py` | 独立检查配置覆盖、原始退出状态和测量补丁哈希 |
 | `data/baseline/` | 原始正式实验 30 行 CSV 及环境信息 |
 | `data/optimization/` | 70 行对照结果、正确性检查及运行元数据 |
 | `data/raw_logs.zip` | 基础实验与优化实验的原始日志、命令和正确性输出 |
@@ -63,6 +64,7 @@ python3 scripts/run_optimization_experiment.py \
   --repeats 7 --cpu 0
 
 python3 -m pip install -r requirements.txt
+python3 scripts/audit_deliverables.py
 python3 scripts/analyze_results.py \
   --baseline data/baseline/results.csv \
   --optimization data/optimization/results.csv \
@@ -70,6 +72,8 @@ python3 scripts/analyze_results.py \
 ```
 
 中文图使用本机合法提供的宋体；字体文件不随仓库分发。不传 `--font` 时需要自行配置可用的中文字体，或将绘图标签改为英文。
+
+报告生成程序为 `scripts/build_report.py`，以课程固定版本的 `docs/实验报告格式参考.docx` 为排版参考，正文设置宋体10.5 pt、1.25倍行距。重建时传入 `--template`、`--project`、`--output` 和 `--identity`；身份文件是包含 `name`、`student_id`、`class`、`department` 的私有JSON，不随公开仓库上传。PDF导出前须安装可用的宋体，并检查最终PDF确实嵌入SimSun，不能只检查DOCX字体设置。
 
 运行二进制时，`GATEANN_VISITED_MODE=bitmap` 启用位图；未设置或设为 `hash` 使用哈希路径。位图仅在 GateANN 的 filter-precheck 模式生效。`GATEANN_RESULT_DUMP=/path/prefix` 会在查询计时结束后导出实际结果与返回数量；性能实验不设置此变量。
 
