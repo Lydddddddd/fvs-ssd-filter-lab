@@ -1,0 +1,168 @@
+--- /dev/null
++++ b/include/utils/dense_visited.h
+@@ -0,0 +1,38 @@
++#pragma once
++
++#include <cstddef>
++#include <cstdint>
++#include <stdexcept>
++#include <vector>
++
++namespace pipeann {
++
++// Exact query-local membership for dense node IDs [0, node_count).
++// The bitmap owns its storage, so concurrent queries do not share marks.
++// Construction zeroes ceil(node_count / 64) words; this cost is included in
++// the query driver's wall-clock measurement.
++class DenseVisited {
++ public:
++  explicit DenseVisited(std::size_t node_count)
++      : node_count_(node_count), words_(node_count / 64 + (node_count % 64 != 0), 0) {}
++
++  // Return true exactly once per valid node ID, matching set::insert.second.
++  bool insert(std::uint32_t id) {
++    if (id >= node_count_) {
++      throw std::out_of_range("DenseVisited: node ID outside index");
++    }
++    auto &word = words_[id >> 6];
++    const std::uint64_t mask = std::uint64_t{1} << (id & 63);
++    const bool fresh = (word & mask) == 0;
++    word |= mask;
++    return fresh;
++  }
++
++  std::size_t storage_bytes() const { return words_.size() * sizeof(std::uint64_t); }
++
++ private:
++  std::size_t node_count_;
++  std::vector<std::uint64_t> words_;
++};
++
++}  // namespace pipeann
+--- a/src/search/pipe_search.cpp
++++ b/src/search/pipe_search.cpp
+@@ -3,6 +3,9 @@
+ #include "ssd_index.h"
+ #include <malloc.h>
+ #include <algorithm>
++#include <cstdlib>
++#include <cstring>
++#include "utils/dense_visited.h"
+ #ifndef USE_AIO
+ #include "liburing.h"
+ #endif
+@@ -81,6 +84,18 @@
+     const unsigned effective_lsearch = l_search;
+     std::vector<Neighbor> retset(mem_L + this->params.R + effective_lsearch * 10);
+     auto &visited = *(query_buf->visited);
++    // Opt-in exact bitmap for GateANN's dense node ID space. The hash path
++    // preserves the course baseline. Each query owns independent storage.
++    const char *visited_mode = std::getenv("GATEANN_VISITED_MODE");
++    const bool use_bitmap = this->filter_precheck_ && visited_mode &&
++                            std::strcmp(visited_mode, "bitmap") == 0;
++    DenseVisited bitmap(use_bitmap ? meta_.npoints : 0);
++    auto try_visit = [&](uint32_t id) -> bool {
++      if (use_bitmap) return bitmap.insert(id);
++      if (visited.find(id) != visited.end()) return false;
++      visited.insert(id);
++      return true;
++    };
+     unsigned cur_list_size = 0;
+ 
+     std::vector<Neighbor> full_retset;
+@@ -106,9 +121,8 @@
+     auto compute_and_push_nbrs = [&](DiskNode<T> &node, unsigned &nk) {
+       unsigned nbors_cand_size = 0;
+       for (unsigned m = 0; m < node.nnbrs; ++m) {
+-        if (visited.find(node.nbrs[m]) == visited.end()) {
++        if (try_visit(node.nbrs[m])) {
+           node.nbrs[nbors_cand_size++] = node.nbrs[m];
+-          visited.insert(node.nbrs[m]);
+         }
+       }
+ 
+@@ -150,9 +164,8 @@
+     auto compute_and_push_nbrs_eager = [&](DiskNode<T> &node, unsigned &nk) {
+       unsigned nbors_cand_size = 0;
+       for (unsigned m = 0; m < node.nnbrs; ++m) {
+-        if (visited.find(node.nbrs[m]) == visited.end()) {
++        if (try_visit(node.nbrs[m])) {
+           node.nbrs[nbors_cand_size++] = node.nbrs[m];
+-          visited.insert(node.nbrs[m]);
+         }
+       }
+       n_computes += nbors_cand_size;
+@@ -189,7 +202,7 @@
+     auto add_to_retset = [&](const unsigned *node_ids, const uint64_t n_ids, float *dists) {
+       for (uint64_t i = 0; i < n_ids; ++i) {
+         retset[cur_list_size++] = Neighbor(node_ids[i], dists[i], true);
+-        visited.insert(node_ids[i]);
++        try_visit(node_ids[i]);
+       }
+     };
+ 
+@@ -319,9 +332,8 @@
+               uint32_t temp_nbrs[MAX_N_EDGES];
+               unsigned cnt = 0;
+               for (unsigned m = 0; m < nnbrs; m++) {
+-                if (visited.find(nbrs[m]) == visited.end()) {
++                if (try_visit(nbrs[m])) {
+                   temp_nbrs[cnt++] = nbrs[m];
+-                  visited.insert(nbrs[m]);
+                 }
+               }
+               if (cnt > 0) {
+--- a/tests/search_disk_index_yfcc.cpp
++++ b/tests/search_disk_index_yfcc.cpp
+@@ -1,3 +1,6 @@
++#include <cstdlib>
++#include <fstream>
++#include <stdexcept>
+ // =============================================================================
+ // YFCC-10M Multi-Label Filtered Search Experiment
+ // =============================================================================
+@@ -238,6 +241,7 @@
+     uint64_t L = Lvec[test_id];
+     auto &res_buf = results[test_id];
+     std::fill(stats.begin(), stats.end(), pipeann::QueryStats{});
++    std::vector<uint32_t> returned_counts(query_num, 0);
+ 
+     auto t0 = std::chrono::high_resolution_clock::now();
+ #pragma omp parallel for schedule(dynamic, 1)
+@@ -245,13 +249,13 @@
+       const void *ql = query_labels.get(i);
+       if (is_fa) {
+         // mode=8: pre-IO filter + tunneling
+-        idx_->pipe_search(query + i * query_dim, recall_at, mem_L, L,
++        returned_counts[i] = idx_->pipe_search(query + i * query_dim, recall_at, mem_L, L,
+                           res_buf.data() + i * recall_at,
+                           nullptr, beamwidth, &stats[i],
+                           nullptr, ql);
+       } else {
+         // mode=2: PipeANN pipe_search + post-filter via selector
+-        idx_->pipe_search(query + i * query_dim, recall_at, mem_L, L,
++        returned_counts[i] = idx_->pipe_search(query + i * query_dim, recall_at, mem_L, L,
+                           res_buf.data() + i * recall_at,
+                           nullptr, beamwidth, &stats[i],
+                           &selector, ql);
+@@ -288,6 +292,20 @@
+               << std::setw(12) << std::fixed << std::setprecision(0) << mean_bd_tunnel
+               << std::setw(12) << std::fixed << std::setprecision(0) << mean_bd_process
+               << std::endl;
++
++    // Optional correctness-only output; written after the timed query phase.
++    // Leave unset for performance runs.
++    if (const char *prefix = std::getenv("GATEANN_RESULT_DUMP")) {
++      const std::string path = std::string(prefix) + ".L" + std::to_string(L) + ".u32";
++      std::ofstream dump(path, std::ios::binary);
++      dump.write(reinterpret_cast<const char *>(res_buf.data()),
++                 res_buf.size() * sizeof(uint32_t));
++      if (!dump) throw std::runtime_error("Cannot write result dump: " + path);
++      std::ofstream counts(path + ".counts", std::ios::binary);
++      counts.write(reinterpret_cast<const char *>(returned_counts.data()),
++                   returned_counts.size() * sizeof(uint32_t));
++      if (!counts) throw std::runtime_error("Cannot write result counts: " + path);
++    }
+   }
+ 
+   delete[] query;
